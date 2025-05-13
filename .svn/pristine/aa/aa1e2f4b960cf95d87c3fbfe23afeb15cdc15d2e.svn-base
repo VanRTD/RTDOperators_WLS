@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<!--
+		the application context definition for the operator
+		DispatcherServlet
+	-->
+	
+	<bean name="/createAccount.do" class="com.rtd.operator.web.CreateAccountFormController" >
+		<property name="userAccountDAO" >
+			<ref bean="userAccountDAO" />
+		</property>
+	</bean>
+
+	<bean name="/createSecurityQuestions.do" class="com.rtd.operator.web.CreateSecurityAnswersController" >
+		<property name="userAccountDAO" >
+			<ref bean="userAccountDAO" />
+		</property>
+	</bean>
+
+	<bean name="/index.do" class="com.rtd.operator.web.secure.DisclaimerController" />
+
+	<bean name="/secure/index.do" class="com.rtd.operator.web.secure.IndexController" />
+
+	<bean name="/secure/getAdminView.do" class="com.rtd.operator.web.secure.AdminViewController" />
+
+	<bean name="/secure/getMondayMorningQ.do" class="com.rtd.operator.web.secure.MondayMorningQController" />
+	
+	<bean name="/secure/getPullinsForReliefs.do" class="com.rtd.operator.web.secure.PullinsForReliefsController" />
+
+	<bean name="/getEmploymentTypeSelection.do" class="com.rtd.operator.web.EmployeeOrContractorController" />
+
+	<bean name="/resetPassword.do" class="com.rtd.operator.web.ResetPasswordController" >
+		<property name="userAccountDAO" >
+			<ref bean="userAccountDAO" />
+		</property>
+	</bean>
+	
+	<bean name="/savePassword.do" class="com.rtd.operator.web.SaveNewPasswordController" >
+		<property name="userAccountDAO" >
+			<ref bean="userAccountDAO" />
+		</property>
+	</bean>
+
+	<bean name="/secure/getDriverAlerts.do" class="com.rtd.operator.web.secure.DriverAlertsController" >
+		<property name="driverAlertsDAO" >
+			<ref bean="driverAlertsDAO" />
+		</property>
+	</bean>
+	
+	<bean name="/secure/getBusBulletinsHome.do" class="com.rtd.operator.web.secure.BusBulletinsHomeController" />
+	
+	<bean name="/secure/getTransportationBulletins.do" class="com.rtd.operator.web.secure.TransportationBulletinController" >
+		<property name="transportationBulletinDAO" >
+			<ref bean="transportationBulletinDAO" />
+		</property>
+	</bean>
+	
+	<bean name="/secure/getLightRailBulletinsHome.do" class="com.rtd.operator.web.secure.LightRailBulletinsHomeController" />	
+		
+	<bean name="/secure/getDetour.do" class="com.rtd.operator.web.secure.DetourController" >
+		<property name="detourDAO" >
+			<ref bean="detourDAO" />
+		</property>
+	</bean>
+	
+	<bean name="/secure/getAlertDetours.do" class="com.rtd.operator.web.secure.AlertDetoursController" >
+		<property name="alertDetourDAO" >
+			<ref bean="alertDetourDAO" />
+		</property>
+	</bean>
+	
+	<bean name="/secure/fetchPageController.do" class="com.rtd.operator.web.secure.FetchPageController" />
+		
+	<bean name="/getLoginForm.do" class="com.rtd.operator.web.LoginFormController" >
+		<property name="successView" value="loginForm" />
+	</bean>
+	
+	<bean name="/secure/getTime.do" class="com.rtd.operator.web.secure.TimeController" >
+		<property name="successView" value="timeView" />
+	</bean>
+	
+	<bean name="/secure/extraboard.do" class="com.rtd.operator.web.secure.extraboard.ExtraboardListController">
+		<property name="userAccountDAO" >
+			<ref bean="userAccountDAO" />
+		</property>
+		<property name="extraboardDAO">
+			<ref bean="extraboardDAO" />
+		</property>
+	</bean>
+	
+	<bean name="/secure/extraboardDetail.do" class="com.rtd.operator.web.secure.extraboard.ExtraboardDetailController">
+		<!-- <property name="dayTypeDAO">
+			<ref bean="dayTypeDAO" />
+		</property> -->
+		<property name="extraboardDetailDAO">
+			<ref bean="extraboardDetailDAO" />
+		</property>
+	</bean>
+
+	<bean name="/secure/fetchDocument.do" class="com.rtd.operator.web.secure.FetchDocumentController" />
+
+	<bean name="/getRetrieveAccountForm.do" class="com.rtd.operator.web.RetrieveAccountFormController" >
+		<property name="successView" value="retrieveAccountForm" />	
+		<property name="userAccountDAO" >
+			<ref bean="userAccountDAO" />
+		</property>					
+	</bean>
+		
+	<bean name="/login.do" class="com.rtd.operator.web.LoginFormController" >
+		<property name="successView" value="loggedInHome" />
+		<property name="failureView" value="loginForm" />
+	</bean>
+	
+	<bean name="/verifyUserSecurityAnswers.do" class="com.rtd.operator.web.VerifyUserSecurityAnswersController" >
+		<property name="hashingService" >
+			<ref bean="hashingService" />
+		</property>
+	</bean>
+	
+	<bean name="/error.do" class="com.rtd.operator.web.ErrorController" />
+	
+	<bean name="/secure/getEmployeePerks.do" class="com.rtd.operator.web.secure.EmployeePerksController" />
+	
+	<bean name="/secure/getEduTraining.do" class="com.rtd.operator.web.secure.EducationTrainingController" />
+	
+	<bean name="/secure/getOperatorRestroomInfo.do" class="com.rtd.operator.web.secure.OperatorRestroomInfoController" />
+	
+	<bean name="/secure/getBusRailOpProj.do" class="com.rtd.operator.web.secure.BusRailOpProjController" />
+
+	<bean name="/secure/getDistrictShuttle.do" class="com.rtd.operator.web.secure.DistrictShuttleController" />
+	
+	<bean name="/secure/getLRTFlagstopInfo.do" class="com.rtd.operator.web.secure.LRTFlagstopInfoController" />
+	
+	<!-- Injectable DAO beans, which also reference our injected data source and hashingService -->
+	<bean id="userAccountDAO" class="com.rtd.operator.dao.UserAccountDAO" >
+		<property name="dataSource" ref="dataSource" />
+		<property name="hashingService" ref="hashingService" />
+	</bean>	
+	
+	<bean id="transportationBulletinDAO" class="com.rtd.operator.dao.TransportationBulletinDAO" >
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="driverAlertsDAO" class="com.rtd.operator.dao.DriverAlertsDAO" >
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="detourDAO" class="com.rtd.operator.dao.DetourDAO" >
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="extraboardDAO" class="com.rtd.operator.dao.extraboard.ExtraboardDAO">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- <bean id="dayTypeDAO" class="com.rtd.operator.dao.DayTypeDAO">
+		<property name="dataSource" ref="dataSource" />
+	</bean> -->
+	
+	<bean id="extraboardDetailDAO" class="com.rtd.operator.dao.extraboard.ExtraboardDetailDAO">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="alertDetourDAO" class="com.rtd.operator.dao.AlertDetourDAO" >
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- Validator Beans to be injected -->
+	<bean name="loginUserValidator" class="com.rtd.operator.validation.LoginUserValidator" />
+		
+
+	<!-- ViewResolver for jsps using JSTL (which is all of them) -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">		
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>	
+
+	<!-- message source which references messages_en_US.properties as our resource bundle -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename">
+			<value>messages_en_US</value>
+		</property>
+	</bean>
+
+</beans>

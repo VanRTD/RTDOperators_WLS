@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="antlib:org.apache.tools.ant" name="RTDOperators_WLS" basedir="." default="">
+	<!--<taskdef resource="net/sf/antcontrib/antlib.xml" />-->
+	<property file="./buildLinux.properties" />
+	<property name="appserver.lib" value="${basedir}/web/WEB-INF/lib" />
+	<property name="version.file" location="./buildLinux.properties" />
+	<property name="applicationArchive" value="${project.name}.${archive.type}" />
+
+	<!-- 
+	======================================================
+	Classpath
+	======================================================
+	 -->
+	<path id="build.classpath">
+		<fileset dir="web/WEB-INF/lib">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${basedir}/web/WEB-INF/lib" />
+
+		<fileset dir="${appserver.lib}">
+			<include name="servlet*.jar" />
+		</fileset>
+
+		<path refid="3rdparty.lib.classpath" />
+		<pathelement path="${build.dir}" />
+	</path>
+
+	<!-- 
+ 	==============================================
+ 	Optional 3rd Party libraries for classpath
+ 	==============================================
+ 	-->
+	<!-- PATH FOR J2EE 1.7 JAR FILE -->
+	<path id="3rdparty.lib.classpath">
+		<fileset dir="${3rdparty.lib.dir}">
+			<include name="J2EE/1_7/**.jar" />
+		</fileset>
+	</path>
+
+	<tstamp>
+		<format property="build_date_time" pattern="EEE, MMM dd, yyyy hh:mm:ss a z" locale="en,US" />
+	</tstamp>
+
+	<echo>CLASSPATH= ${toString:build.classpath}</echo>
+
+	<presetdef name="javac">
+		<javac includeantruntime="false" />
+	</presetdef>
+
+	<target name="clean" unless="cleanDone">
+		<echo> Running ${project.name} build </echo>
+		<echo>Cleaning ${build.dir}...</echo>
+		<delete dir="${build.dir}" />
+		<echo>Cleaning ${web.content}/WEB-INF/classes...</echo>
+		<delete dir="${web.content}/WEB-INF/classes" />
+		<echo>Cleaning ${dist.dir}...</echo>
+		<!--<delete dir="${dist.dir}" />-->
+		<delete>
+			<fileset dir="." includes="*.txt" />
+		</delete>
+		<condition property="cleanDone">
+			<not>
+				<available file="${build.dir}" type="dir" />
+			</not>
+		</condition>
+	</target>
+
+	<target name="init" depends="clean" unless="initDone">
+		<echo>Creating the build directory...</echo>
+		<mkdir dir="${basedir}/web/WEB-INF/classes" />
+		<mkdir dir="${basedir}/web/WEB-INF/lib" />
+		<mkdir dir="${build.dir}" />
+		<echo>Creating the dist directory...</echo>
+		<mkdir dir="${dist.dir}" />
+		<condition property="initDone">
+			<available file="${build.dir}" type="dir" />
+		</condition>
+	</target>
+
+	<!-- This compile target will generate debug info -->
+	<target name="compileDev" depends="clean, init, copy">
+		<echo>Compile the source files</echo>
+		<javac destdir="${build.dir}/WEB-INF/classes/" source="${java.source}" target="${java.target}" debug="true" deprecation="false" optimize="false" failonerror="true">
+			<src path="${src.dir}" />
+			<classpath refid="build.classpath" />
+		</javac>
+	</target>
+
+	<!-- This compile target does not generate debug info -->
+	<target name="compile" depends="clean, init, copy">
+		<echo>Compile the source files</echo>
+		<javac destdir="${build.dir}/WEB-INF/classes/" source="${java.source}" target="${java.target}" debug="false" deprecation="false" optimize="false" failonerror="true">
+			<src path="${src.dir}" />
+			<classpath refid="build.classpath" />
+		</javac>
+	</target>
+
+	<target name="copy" description="Setup the compile environment for building the source" unless="copyDone">
+		<echo>Copying files from ${basedir}/src to ${basedir}/${build.dir}</echo>
+		<copy todir="${build.dir}">
+			<fileset dir="${web.content}" excludes="**/..build/**, **/com/**, ${web.content}/WEB-INF/*.prod, ${web.content}/WEB-INF/*.cert, 
+				${web.content}/WEB-INF/*.dev, ${web.content}/WEB-INF/*.local, ${web.content}/WEB-INF/classes/.classpath, 
+				${web.content}/WEB-INF/classes/.project" />
+		</copy>
+		<copy file="${basedir}/src/messages_en_US.properties" todir="${build.dir}/WEB-INF/classes" overwrite="true" />
+		<condition property="copyDone">
+			<available file="${build.dir}/WEB-INF/lib/*.jar" type="file" />
+		</condition>
+	</target>
+
+	<!--
+		Application Version increment targets
+	-->
+	<target name="2_newMajorRelease" depends="resetIncrementMajor, inc.build" />
+
+	<target name="1_newMinorRelease" depends="resetIncrementMinor, inc.build" />
+
+	<!--
+		Build targets
+	-->
+	<!-- DEV -->
+	<target name="buildDev" depends="compileDev">
+		<echo>Creating DEV WAR...</echo>
+		<property name="destination" value="DEV" />
+		<copy file="${conf.dir}/application.in" tofile="${build.dir}/WEB-INF/classes/application.properties" overwrite="true">
+			<filterset>
+				<filter token="db_conn_pool_jndi_name" value="${db.conn.pool.jndi.name}" />
+			</filterset>
+			<filterset>
+				<filter token="document_root" value="${dev.document.root}" />
+			</filterset>
+		</copy>
+		<copy file="${web.content}/WEB-INF/applicationContext.xml" tofile="${build.dir}/WEB-INF/applicationContext.xml" overwrite="true">
+			<filterset>
+				<filter token="java_naming_provider_url" value="${dev.java.naming.provider.url}" />
+			</filterset>
+		</copy>
+		<copy file="${web.content}/WEB-INF/log4j.xml" tofile="${build.dir}/WEB-INF/log4j.xml" overwrite="true">
+			<filterset>
+				<filter token="log_basedir" value="${dev.log.basedir}" />
+			</filterset>
+			<filterset>
+				<filter token="log_level" value="${dev.log.level}" />
+			</filterset>
+		</copy>
+		<manifest file="${build.dir}/META-INF/MANIFEST.MF">
+			<attribute name="Built-By" value="${user.name}" />
+			<attribute name="Weblogic-Application-Version" value="${application.version}" />
+			<attribute name="Destination" value="${destination}" />
+			<attribute name="Jenkins-Build-Number" value="${build.number}" />
+			<attribute name="Build-Date" value="${build_date_time}" />
+		</manifest>
+		<delete dir="${dist.dir}/dev" />
+		<mkdir dir="${dist.dir}/dev" />
+		<war destfile="${dist.dir}/dev/${applicationArchive}" webxml="${build.dir}/WEB-INF/web.xml" manifest="${build.dir}/META-INF/MANIFEST.MF">
+			<fileset dir="${build.dir}" />
+		</war>
+		<echo>Confirming existence of archive file ${dist.dir}/dev/${applicationArchive}</echo>
+		<condition property="devArchiveExists">
+			<available file="${dist.dir}/dev/${applicationArchive}" />
+		</condition>
+	</target>
+	<!-- CERT -->
+	<target name="buildCert" depends="compile">
+		<echo>Creating CERT application archive...</echo>
+		<property name="destination" value="CERT" />
+		<copy file="${conf.dir}/application.in" tofile="${build.dir}/WEB-INF/classes/application.properties" overwrite="true">
+			<filterset>
+				<filter token="db_conn_pool_jndi_name" value="${db.conn.pool.jndi.name}" />
+			</filterset>
+			<filterset>
+				<filter token="document_root" value="${cert.document.root}" />
+			</filterset>
+		</copy>
+		<copy file="${web.content}/WEB-INF/applicationContext.xml" tofile="${build.dir}/WEB-INF/applicationContext.xml" overwrite="true">
+			<filterset>
+				<filter token="java_naming_provider_url" value="${cert.java.naming.provider.url}" />
+			</filterset>
+		</copy>
+		<copy file="${web.content}/WEB-INF/log4j.xml" tofile="${build.dir}/WEB-INF/log4j.xml" overwrite="true">
+			<filterset>
+				<filter token="log_basedir" value="${cert.log.basedir}" />
+			</filterset>
+			<filterset>
+				<filter token="log_level" value="${cert.log.level}" />
+			</filterset>
+		</copy>
+		<manifest file="${build.dir}/META-INF/MANIFEST.MF">
+			<attribute name="Built-By" value="${user.name}" />
+			<attribute name="Weblogic-Application-Version" value="${application.version}" />
+			<attribute name="Destination" value="${destination}" />
+			<attribute name="Jenkins-Build-Number" value="${build.number}" />
+			<attribute name="Build-Date" value="${build_date_time}" />
+		</manifest>
+		<delete dir="${dist.dir}/cert" />
+		<mkdir dir="${dist.dir}/cert" />
+		<war destfile="${dist.dir}/cert/${applicationArchive}" webxml="${build.dir}/WEB-INF/web.xml" manifest="${build.dir}/META-INF/MANIFEST.MF">
+			<fileset dir="${build.dir}" />
+		</war>
+		<echo>Confirming existence of archive file ${dist.dir}/cert/${applicationArchive}</echo>
+		<condition property="certArchiveExists">
+			<available file="${dist.dir}/cert/${applicationArchive}" />
+		</condition>
+	</target>
+
+	<!-- 
+			target: buildWarProd
+			Create WAR file for PROD environment.  This relies on a previous CERT build.
+			The CERT build files are used while the manifest and property files are revised
+			to reflect PROD-centric information.
+		-->
+	<target name="buildProd" depends="checkProperties, check4CertArchive">
+		<echo>Creating PROD application archive...</echo>
+		<fail unless="certArchiveExists" message="*** Deploy failed!  No CERT archive available to create PROD version." />
+		<property name="destination" value="PROD" />
+		<copy file="${conf.dir}/application.in" tofile="${build.dir}/WEB-INF/classes/application.properties" overwrite="true">
+			<filterset>
+				<filter token="db_conn_pool_jndi_name" value="${db.conn.pool.jndi.name}" />
+			</filterset>
+			<filterset>
+				<filter token="document_root" value="${prod.document.root}" />
+			</filterset>
+		</copy>
+		<copy file="${web.content}/WEB-INF/applicationContext.xml" tofile="${build.dir}/WEB-INF/applicationContext.xml" overwrite="true">
+			<filterset>
+				<filter token="java_naming_provider_url" value="${prod.java.naming.provider.url}" />
+			</filterset>
+		</copy>
+		<copy file="${web.content}/WEB-INF/log4j.xml" tofile="${build.dir}/WEB-INF/log4j.xml" overwrite="true">
+			<filterset>
+				<filter token="log_basedir" value="${prod.log.basedir}" />
+			</filterset>
+			<filterset>
+				<filter token="log_level" value="${prod.log.level}" />
+			</filterset>
+		</copy>
+		<manifest file="${build.dir}/META-INF/MANIFEST.MF">
+			<attribute name="Built-By" value="${user.name}" />
+			<attribute name="Weblogic-Application-Version" value="${application.version}" />
+			<attribute name="Destination" value="${destination}" />
+			<attribute name="Jenkins-Build-Number" value="${build.number}" />
+			<attribute name="Build-Date" value="${build_date_time}" />
+		</manifest>
+		<delete dir="${dist.dir}/prod" />
+		<mkdir dir="${dist.dir}/prod" />
+		<war destfile="${dist.dir}/prod/${applicationArchive}" webxml="${build.dir}/WEB-INF/web.xml" manifest="${build.dir}/META-INF/MANIFEST.MF">
+			<fileset dir="${build.dir}" />
+		</war>
+		<condition property="prodArchiveExists">
+			<available file="${dist.dir}/prod/${applicationArchive}" />
+		</condition>
+		<!-- <antcall target="deployProd"/> -->
+	</target>
+
+	<target name="check4CertArchive">
+		<echo>Looking for archive: ${basedir}\${cert.dir}\${applicationArchive}</echo>
+		<condition property="certArchiveExists">
+			<available file="${dist.dir}/cert/${applicationArchive}" type="file" />
+		</condition>
+		<echo message="Done">
+		</echo>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: checkProperties                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="checkProperties">
+		<echo>Checking property assignments...</echo>
+		<fail message="FAIL: Property db.conn.pool.jndi.name not set">
+			<condition>
+				<or>
+					<equals arg1="${db.conn.pool.jndi.name}" arg2="" />
+					<not>
+						<isset property="db.conn.pool.jndi.name" />
+					</not>
+				</or>
+			</condition>
+		</fail>
+		<fail message="FAIL: Property prod.java.naming.provider.url not set">
+			<condition>
+				<or>
+					<equals arg1="${prod.java.naming.provider.url}" arg2="" />
+					<not>
+						<isset property="prod.java.naming.provider.url" />
+					</not>
+				</or>
+			</condition>
+		</fail>
+		<fail message="FAIL: Property cert.java.naming.provider.url not set">
+			<condition>
+				<or>
+					<equals arg1="${cert.java.naming.provider.url}" arg2="" />
+					<not>
+						<isset property="cert.java.naming.provider.url" />
+					</not>
+				</or>
+			</condition>
+		</fail>
+		<fail message="FAIL: Property dev.java.naming.provider.url not set">
+			<condition>
+				<or>
+					<equals arg1="${dev.java.naming.provider.url}" arg2="" />
+					<not>
+						<isset property="dev.java.naming.provider.url" />
+					</not>
+				</or>
+			</condition>
+		</fail>
+		<fail message="FAIL: Property prod.document.root not set">
+			<condition>
+				<or>
+					<equals arg1="${prod.document.root}" arg2="" />
+					<not>
+						<isset property="prod.document.root" />
+					</not>
+				</or>
+			</condition>
+		</fail>
+		<fail message="FAIL: Property cert.document.root not set">
+			<condition>
+				<or>
+					<equals arg1="${cert.document.root}" arg2="" />
+					<not>
+						<isset property="cert.document.root" />
+					</not>
+				</or>
+			</condition>
+		</fail>
+		<fail message="FAIL: Property dev.document.root not set">
+			<condition>
+				<or>
+					<equals arg1="${dev.document.root}" arg2="" />
+					<not>
+						<isset property="dev.document.root" />
+					</not>
+				</or>
+			</condition>
+		</fail>
+	</target>
+
+
+
+	<!--
+	  ==========================================================================================
+	  Build Numbering targets 
+	  ==========================================================================================
+	  -->
+	<target name="inc.build" depends="inc.major, inc.minor, inc.revision, inc.application.version">
+	</target>
+	<!-- -->
+	<target name="resetIncrementMinor">
+		<propertyreset name="increment.minor" value="true" />
+	</target>
+	<!-- -->
+	<target name="resetIncrementMajor">
+		<propertyreset name="increment.major" value="true" />
+	</target>
+	<!-- -->
+	<target name="inc.major" depends="inc.major.properties" if="${increment.major}">
+	</target>
+	<!-- -->
+	<target name="inc.minor" depends="inc.major, inc.minor.properties" if="${increment.minor}">
+	</target>
+	<!-- -->
+	<target name="inc.revision" depends="inc.major, inc.minor, inc.revision.properties" if="${increment.revision}">
+	</target>
+	<!-- -->
+	<!-- Next three targets update the build numbers in the properties file -->
+	<target name="inc.revision.properties" if="${increment.revision}">
+		<echo>Incrementing build.revision.number...</echo>
+		<math operation="+" operator1="${build.revision.number}" operator2="1" result="newRevision" />
+		<echo>newRevision=${newRevision}</echo>
+		<propertyfile file="${version.file}">
+			<entry key="build.major.number" default="0" operation="=" type="int" />
+			<entry key="build.minor.number" default="0" operation="=" type="int" />
+			<entry key="build.revision.number" default="0" operation="+" type="int" />
+			<entry key="increment.revision" value="true" type="string" />
+		</propertyfile>
+		<propertyreset name="build.revision.number" value="${newRevision}" />
+		<propertyreset name="date.last.incremented" value="${build_date_time}" />
+	</target>
+	<!-- -->
+	<target name="inc.minor.properties" if="${increment.minor}">
+		<echo>Incrementing build.minor.number...</echo>
+		<property name="increment.revision" value="false" />
+		<math operation="+" operator1="${build.minor.number}" operator2="1" result="newMinor" />
+		<echo>new build.minor.number=${newMinor}</echo>
+		<propertyfile file="${version.file}">
+			<entry key="build.major.number" default="0" operation="=" type="int" />
+			<entry key="build.minor.number" default="0" operation="+" type="int" />
+			<entry key="build.revision.number" value="0" operation="=" type="int" />
+			<entry key="increment.minor" value="false" type="string" />
+			<entry key="date.last.incremented" value="${build_date_time}" type="string" />
+		</propertyfile>
+		<propertyreset name="build.minor.number" value="${newMinor}" />
+		<propertyreset name="increment.revision" value="false" />
+		<propertyreset name="increment.app.version" value="true" />
+		<propertyreset name="date.last.incremented" value="${build_date_time}" />
+	</target>
+	<!-- -->
+	<target name="inc.major.properties" if="${increment.major}">
+		<echo>Incrementing build.major.number...</echo>
+		<!--<echo>inc.major=${increment.major}, inc.minor=${increment.minor}, inc.revision=${increment.revision}</echo>-->
+		<math operation="+" operator1="${build.major.number}" operator2="1" result="newMajor" />
+		<echo>new build.major.number=${newMajor}</echo>
+		<propertyfile file="${version.file}">
+			<entry key="build.major.number" default="0" operation="+" type="int" />
+			<entry key="build.minor.number" value="0" operation="=" type="int" />
+			<entry key="build.revision.number" value="0" operation="=" type="int" />
+			<entry key="increment.major" value="false" type="string" />
+			<entry key="date.last.incremented" value="${build_date_time}" type="string" />
+		</propertyfile>
+		<propertyreset name="build.major.number" value="${newMajor}" />
+		<propertyreset name="build.minor.number" value="0" />
+		<propertyreset name="build.revision.number" value="0" />
+		<propertyreset name="increment.minor" value="false" />
+		<propertyreset name="increment.revision" value="false" />
+		<propertyreset name="increment.app.version" value="true" />
+		<propertyreset name="date.last.incremented" value="${build_date_time}" />
+	</target>
+	<!-- -->
+	<target name="inc.application.version" if="increment.app.version">
+		<echo>Updating application.version...</echo>
+		<property file="build.properties" />
+		<property name="major.number" value="${build.major.number}" />
+		<property name="minor.number" value="${build.minor.number}" />
+		<propertyreset name="application.version" value="v${major.number}.${minor.number}" />
+		<echo>new application.version=${application.version}</echo>
+		<propertyfile file="${version.file}">
+			<entry key="application.version" value="v${build.major.number}.${build.minor.number}" type="string" />
+		</propertyfile>
+	</target>
+	<!--
+	  ==========================================================================================
+	  Macros for resetting properties 
+	  ==========================================================================================
+	  -->
+	<macrodef name="load.version.info">
+		<sequential>
+			<property file="${version.file}" />
+			<checksum file="${version.file}" property="sha1.number" algorithm="SHA" />
+			<echo>Version: v${build.major.number}.${build.minor.number}.${build.revision.number}</echo>
+			<echo>SHA1: ${sha1.number}</echo>
+		</sequential>
+	</macrodef>
+	<scriptdef name="propertyreset" language="javascript" src="setProperty.js" description="Allows to assign @{property} new value">
+		<attribute name="name" />
+		<attribute name="value" />
+		<!--project.setProperty(attributes.get("name"), attributes.get("value"));-->
+	</scriptdef>
+	<macrodef name="math">
+		<attribute name="operation" />
+		<attribute name="operator1" />
+		<attribute name="operator2" />
+		<attribute name="result" />
+		<sequential>
+			<script language="javascript">
+			     tmp = 0;
+			     switch ("@{operation}")
+			     {
+			      case "+" :
+			       tmp = parseInt("@{operator1}") + parseInt("@{operator2}");
+			       break;
+			      case "-" :
+			       tmp = parseInt("@{operator1}") - parseInt("@{operator2}");
+			       break;
+			      case "=" :
+			       tmp = parseInt("@{operator1}") * parseInt("@{operator2}");
+			       break;
+			     }
+			     project.setProperty("@{result}", tmp);
+			    </script>
+		</sequential>
+	</macrodef>
+	
+</project>

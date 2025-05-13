@@ -1,0 +1,4 @@
+
+# Build environment variables
+wlst.scripts.dir=/var/lib/jenkins/tools/WLST
+3rdparty.lib.dir=/var/lib/jenkins/workspace/3rdpartylib

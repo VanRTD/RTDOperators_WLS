@@ -1,0 +1,2 @@
+operator.documentRoot=@document_root@
+db.conn.pool.jndi.name=@db_conn_pool_jndi_name@

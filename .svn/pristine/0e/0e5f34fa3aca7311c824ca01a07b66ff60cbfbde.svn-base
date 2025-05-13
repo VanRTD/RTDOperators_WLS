@@ -1,0 +1,4 @@
+@charset "utf-8";
+/* CSS Document - stylesheet for traincard (html version) jsp */
+td{font-family: "Courier New", Courier, mono; font-size : 13px}
+

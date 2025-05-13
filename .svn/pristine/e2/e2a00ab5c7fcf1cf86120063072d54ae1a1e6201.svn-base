@@ -1,0 +1,6 @@
+#Thu, 24 Oct 2019 15:40:10 -0600
+#Tue Jul 25 2017
+
+# Build environment variables
+wlst.scripts.dir=/Development/tools/WLST
+3rdparty.lib.dir=/Development/Subversion_Projects/3rdpartylib

@@ -1,0 +1,638 @@
+<style type="text/css">
+
+/*main wrapper for operator layout*/
+#wrapper {
+	overflow:hidden;
+	width:100%;
+	position:absolute;
+	left:0px;
+	top:0;
+	padding-bottom:30px;
+}
+
+/* Wrapper for body of page, this is the main white box where content lives */
+#bodyWrapper {
+	width:950px; 
+	background-color:#FFF; 
+	margin-left:auto; 
+	margin-right:auto; 
+	margin-top:0px; 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif; 
+	font-size: 12px;
+	color: #2a3c5d;
+	line-height: 17px;
+}
+
+/* this style is not being referenced due to browsing the operators website on smart phone devices */
+#header 
+{
+	border: 0px solid;
+	border-color: black;	
+	border-color: #c0c0c0;
+	background-color: #c0c0c0;
+	position: absolute;
+	width: 80%;
+	height: 40px;
+	top: 0;
+	right: 0;
+	bottom: 1px;
+	left: 0px;
+}
+
+#main 
+{	
+	background-color: white;
+	border: 0px solid;		
+	position: absolute;
+	width: 950px;
+	top: 115px;	
+	left: 5px;
+	text-align: center;
+	bottom: 30px;
+	overflow-y: auto; 
+	overflow-x: hidden;	
+}
+
+#container 
+{	
+    position: absolute;
+    left: 21%;    
+    min-height: 100%;
+}
+
+#mainContent
+{
+	border: 0px solid;
+	border-color: green;	
+	text-align: center;
+	margin-bottom: 0px;
+	padding-top:10px;
+}
+
+#footer 
+{	
+	position: absolute;
+	border: 0px solid;
+	border-color: black;	
+	background-color: white;	
+	bottom: 0px;
+	width: 950px;
+	height: 30px;		
+	left: 5px;
+	text-align: center;
+	v-align: bottom;
+}
+/* end this style is not being referenced due to browsing the operators website on smart phone devices */
+
+#menu 
+{		
+	border: 1px solid;
+	border-color: white;
+	position: relative;
+	width: 235px;
+	height: auto;
+	top: 0px;
+	left: 0px;			
+}
+
+dl {
+ font:normal 12px/15px Arial;
+ position: relative;
+ width: 350px;
+}
+dt {
+ clear: both;
+ float:left;
+ width: 130px;
+ padding: 4px 0 2px 0;
+ text-align: center;
+ padding-left: 10px;
+}
+dd {
+ float: left;
+ width: 200px;
+ margin: 0 0 8px 0;
+ padding-left: 10px;
+}
+
+.formError
+{	
+	color: red;
+}
+
+.label
+{
+	color: black;
+	font-weight: bold;	
+}
+
+
+/* begin stylesheet for look & feel of RTD website */
+h1 {
+  font-family: Helvetica, Arial, Tahoma, Verdana, sans-serif;
+	font-size:24px;
+	color:#677ea9;
+	font-weight: lighter;
+	line-height:20px;
+	text-decoration: none;
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+.bodyBlue {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #2a3c5d;
+	line-height: 17px;
+	width: 80%;
+}
+
+.bodyBlueNoWidth {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #2a3c5d;
+	line-height: 17px;
+}
+
+.bodyRedNoWidth {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #ff3300;
+	line-height: 17px;
+}
+
+.bodyBlueItalic {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #2a3c5d;
+	line-height: 17px;
+	font-style: italic;	
+}
+
+.bodyBlueBoldItalic {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #2a3c5d;
+	line-height: 17px;
+	font-style: italic;	
+	font-weight: bold;
+}
+
+.bodyBlueSchedInstr { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #2a3c5d;
+	line-height: 22px;
+}
+
+.bodyBlueBold {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #2a3c5d;
+	font-weight: bold;
+	line-height: 17px;
+}
+
+.bodyBlueHeadline {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #677ea9;
+	font-weight: bold;
+	line-height: 17px;
+}
+
+.bodyBlueBoldLink {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #2a3c5d;
+	font-weight: bold;
+	line-height: 17px;
+	text-decoration: underline;
+}
+
+.bodyBlueBoldLinkMouseOver {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #677ea9;
+	font-weight: bold;
+	line-height: 17px;
+	text-decoration: underline;
+}
+
+.on {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #677ea9;
+	font-weight: bold;
+	line-height: 17px;
+	text-decoration: underline;
+}
+
+.off {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #2a3c5d;
+	font-weight: bold;
+	line-height: 17px;
+	text-decoration: underline;
+}
+
+.bodyBlueLink {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #2a3c5d;
+	line-height: 17px;
+	text-decoration: underline;
+}
+
+.scheduleRouteName { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	color: #677ea9;
+	font-weight: bold;
+}
+
+.subBodyGrey { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10.5px;
+	color: #666666;
+	line-height: 15px;
+}
+
+.bodyGrey {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #666666;
+	line-height: 15px;
+}
+.bodyGreyItalic {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #666666;
+	line-height: 15px;
+	font-style: italic;
+}
+
+.alertBlue { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #556d9a;
+	line-height: 15px;
+}
+
+.alertBlueBold { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #4d6590;
+	font-weight: bold;
+	line-height: 15px;
+}
+
+.resourceBlueBold { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #6b86b7;
+	font-weight: bold;
+	line-height: 25px;
+}
+
+.plannerGreyOne { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #3e3c33;
+	font-weight: bold;
+}
+
+a.plannerGreyOne { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #3e3c33;
+	font-weight: bold;
+}
+
+.plannerGreyTwo { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #69675f;
+	font-weight: bold;
+}
+
+.plannerDates { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #FFF;
+}
+
+a.plannerDates { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFF;
+	text-decoration:none;
+}
+.scheduleHeaderBlue { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #768eb7;
+	font-weight: bold;
+	line-height: 15px;
+}
+
+.scheduleHeaderBlueHilite { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #bd2828;
+	font-weight: bold;
+	line-height: 15px;
+}
+
+.scheduleTimesGrey { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #2d2d2d;
+	line-height: 15px;
+}
+
+.scheduleStations { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #2a3c5d;
+	line-height: 12px;
+}
+
+.sideBoxBlue { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #6b86b7;
+}
+
+.footerBlue { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #556d9a;
+	line-height: 15px;
+}
+
+.sysMapHeadline {
+	font-family:Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size:24px;
+	color:#677ea9;
+	font-weight:bold;
+	line-height:27px;
+}
+
+.sysMapLegend {
+	margin-top:20px;
+}
+
+a.alertBlueBoldLink:link { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #4d6590;
+	font-weight: bold;
+	line-height: 15px;
+	text-decoration:none;
+}
+
+a.alertBlueBoldLink:visited { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #4d6590;
+	font-weight: bold;
+	line-height: 15px;
+	text-decoration:none;
+}
+
+a.alertBlueBoldLink:hover { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #2a3c5d;
+	font-weight: bold;
+	line-height: 15px;
+	text-decoration:underline;
+}
+
+a.alertBlueBoldLink:active { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #2a3c5d;
+	font-weight: bold;
+	line-height: 15px;
+	text-decoration:underline;
+}
+
+a.footerLink:link {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #556d9a;
+	text-decoration: none;
+}
+	
+a.footerLink:visited {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #556d9a;
+	text-decoration: none;
+}
+	
+a.footerLink:hover {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #000;
+	text-decoration: underline;
+}
+	
+a.footerLink:active {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #e59c28;
+	text-decoration: none;
+}
+
+a.sideBoxLink:link {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #6b86b7;
+	text-decoration: none;
+}
+	
+a.sideBoxLink:visited {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #6b86b7;
+	text-decoration: none;
+}
+	
+a.sideBoxLink:hover {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #2d446e;
+	text-decoration: none;
+}
+	
+a.sideBoxLink:active {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #e59c28;
+	text-decoration: none;
+}
+
+a.landingPageLink:link {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #2a3c5d;
+	font-weight: bold;
+	text-decoration: underline;
+}
+	
+a.landingPageLink:visited {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #6b86b7;
+	font-weight: bold;
+	text-decoration: underline;
+}
+	
+a.landingPageLink:hover {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #2d446e;
+	font-weight: bold;
+	text-decoration: underline;
+}
+	
+a.landingPageLink:active {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #e59c28;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+a.plannerTabLink:link {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	font-size: 9px;
+	color: #4f420d;
+	text-decoration: none;
+}
+	
+a.plannerTabLink:visited {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	font-size: 9px;
+	color: #4f420d;
+	text-decoration: none;
+}
+	
+a.plannerTabLink:hover {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	font-size: 9px;
+	color: #000;
+	text-decoration: underline;
+}
+	
+a.plannerTabLink:active {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	font-size: 9px;
+	color: #4f420d;
+	text-decoration: none;
+}
+
+a.alertMoreLink:link {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #515151;
+	text-decoration: underline;
+	line-height: 15px;
+}
+	
+a.alertMoreLink:visited {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #515151;
+	text-decoration: underline;
+	line-height: 15px;
+}
+	
+a.alertMoreLink:hover {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000;
+	text-decoration: underline;
+	line-height: 15px;
+}
+	
+a.alertMoreLink:active {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #869cc5;
+	text-decoration: underline;
+	line-height: 15px;
+}
+
+a.schedFindLink:link {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #69675f;
+	text-decoration: underline;
+	font-weight: bold;
+	line-height: 8px;
+}
+	
+a.schedFindLink:visited {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #69675f;
+	text-decoration: underline;
+	font-weight: bold;
+	line-height: 8px;
+}
+	
+a.schedFindLink:hover {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #000;
+	text-decoration: underline;
+	font-weight: bold;
+	line-height: 8px;
+}
+	
+a.schedFindLink:active {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #000;
+	text-decoration: underline;
+	font-weight: bold;
+	line-height: 8px;
+}
+
+a {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #2a3c5d;
+	line-height: 17px;
+	text-decoration: underline;
+}
+
+.tdLabel { 
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #69675f;
+	font-weight: bold;
+}
+
+.plateNum {
+	font-family:Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size:42px;
+	color:#003300;
+	font-weight:bold;
+	line-height:27px;
+}
+/* end stylesheet for look & feel of RTD website */
+
+</style>
